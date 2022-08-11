@@ -146,7 +146,7 @@
         pengunjung();
         function pengunjung() {
             var id = cabang_id;
-            var url = '{{ route("home.antrian.pengunjung", ":id") }}';
+            var url = '{{ route("home.antrian.grafik", ":id") }}';
             url = url.replace(':id', id);
 
             $.ajax({
@@ -191,7 +191,7 @@
         pengunjungShift();
         function pengunjungShift() {
             var id = cabang_id;
-            var url = '{{ route("home.antrian.pengunjung", ":id") }}';
+            var url = '{{ route("home.antrian.grafik", ":id") }}';
             url = url.replace(':id', id);
 
             $.ajax({

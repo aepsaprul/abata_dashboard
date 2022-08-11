@@ -16,32 +16,15 @@
         <div class="container-fluid">
             <div class="row">
                 <!-- data antrian -->
-                <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-12">
                     <div class="card mt-4">
                         <div class="card-header">
                             <h6>Data Antrian</h6>
                         </div>
                         <div class="card-body">
-                            <table id="tabel_antrian" class="table table-bordered table-striped">
-                                <thead>
-                                    <tr>
-                                        <th class="text-center text-indigo">Nama Cabang</th>
-                                        <th class="text-center text-indigo">Pengunjung Hari Ini</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($cabangs as $key => $item)
-                                        @if (count($item->antrianPengunjung) > 0)
-                                            <tr>
-                                                <td><a href="{{ route('home.antrian', [$item->id]) }}">{{ $item->nama_cabang }}</a></td>
-                                                <td class="text-center">
-                                                    {{ count($item->antrianSementara) }}
-                                                </td>
-                                            </tr>
-                                        @endif
-                                    @endforeach
-                                </tbody>
-                            </table>
+                            <div class="chart">
+                                <canvas id="myChart" width="1000" height="200"></canvas>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -71,7 +54,98 @@
 
 <script>
     $(document).ready(function () {
-
+        pengunjung();
+        function pengunjung() {
+            $.ajax({
+                url: "{{ URL::route('home.antrian.grafik') }}",
+                type: 'get',
+                success: function (response) {
+                    const ctx = document.getElementById('myChart').getContext('2d');
+                    let data_labels = response.tanggal_pengunjung;
+                    const myChart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: data_labels,
+                            datasets: [
+                                {
+                                    label: 'Situmpur',
+                                    data: response.total_pengunjung_situmpur,
+                                    backgroundColor: [
+                                        '#cc0000'
+                                    ],
+                                    borderColor: [
+                                        '#cc0000'
+                                    ],
+                                    borderWidth: 1
+                                },
+                                {
+                                    label: 'Dukuh Waluh',
+                                    data: response.total_pengunjung_dkw,
+                                    backgroundColor: [
+                                        '#30845e'
+                                    ],
+                                    borderColor: [
+                                        '#30845e'
+                                    ],
+                                    borderWidth: 1
+                                },
+                                {
+                                    label: 'HR Bunyamin',
+                                    data: response.total_pengunjung_hr,
+                                    backgroundColor: [
+                                        '#ffe800'
+                                    ],
+                                    borderColor: [
+                                        '#ffe800'
+                                    ],
+                                    borderWidth: 1
+                                },
+                                {
+                                    label: 'Purbalingga',
+                                    data: response.total_pengunjung_pbg,
+                                    backgroundColor: [
+                                        '#123abc'
+                                    ],
+                                    borderColor: [
+                                        '#123abc'
+                                    ],
+                                    borderWidth: 1
+                                },
+                                {
+                                    label: 'Cilacap',
+                                    data: response.total_pengunjung_cilacap,
+                                    backgroundColor: [
+                                        '#ff3e99'
+                                    ],
+                                    borderColor: [
+                                        '#ff3e99'
+                                    ],
+                                    borderWidth: 1
+                                },
+                                {
+                                    label: 'Bumiayu',
+                                    data: response.total_pengunjung_bumiayu,
+                                    backgroundColor: [
+                                        '#637999'
+                                    ],
+                                    borderColor: [
+                                        '#637999'
+                                    ],
+                                    borderWidth: 1
+                                }
+                            ]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+                }
+            })
+        }
     })
 </script>
 

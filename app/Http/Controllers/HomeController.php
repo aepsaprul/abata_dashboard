@@ -33,7 +33,96 @@ class HomeController extends Controller
         ]);
     }
 
-    public function antrian($id)
+    public function antrianGrafik()
+    {
+        $bulan_sekarang = date("Y-m");
+
+        // situmpur
+        $pengunjung_situmpur = AntrianPengunjung::select(DB::raw('count(*) AS total_pengunjung'), DB::raw('DAY(tanggal) AS tanggal_pengunjung'))
+            ->where('master_cabang_id', 2)
+            ->where('tanggal', 'like', '%'.$bulan_sekarang.'%')
+            ->groupBy('tanggal_pengunjung')
+            ->get();
+
+        $tanggal_pengunjung = [];
+        $total_pengunjung_situmpur = [];
+        foreach ($pengunjung_situmpur as $key => $value) {
+            $tanggal_pengunjung[] = $value->tanggal_pengunjung;
+            $total_pengunjung_situmpur[] = $value->total_pengunjung;
+        }
+
+        // dkw
+        $pengunjung_dkw = AntrianPengunjung::select(DB::raw('count(*) AS total_pengunjung'), DB::raw('DAY(tanggal) AS tanggal_pengunjung'))
+            ->where('master_cabang_id', 3)
+            ->where('tanggal', 'like', '%'.$bulan_sekarang.'%')
+            ->groupBy('tanggal_pengunjung')
+            ->get();
+
+        $total_pengunjung_dkw = [];
+        foreach ($pengunjung_dkw as $key => $value) {
+            $total_pengunjung_dkw[] = $value->total_pengunjung;
+        }
+
+        // hr
+        $pengunjung_dkw = AntrianPengunjung::select(DB::raw('count(*) AS total_pengunjung'), DB::raw('DAY(tanggal) AS tanggal_pengunjung'))
+            ->where('master_cabang_id', 4)
+            ->where('tanggal', 'like', '%'.$bulan_sekarang.'%')
+            ->groupBy('tanggal_pengunjung')
+            ->get();
+
+        $total_pengunjung_hr = [];
+        foreach ($pengunjung_dkw as $key => $value) {
+            $total_pengunjung_hr[] = $value->total_pengunjung;
+        }
+
+        // pbg
+        $pengunjung_pbg = AntrianPengunjung::select(DB::raw('count(*) AS total_pengunjung'), DB::raw('DAY(tanggal) AS tanggal_pengunjung'))
+            ->where('master_cabang_id', 5)
+            ->where('tanggal', 'like', '%'.$bulan_sekarang.'%')
+            ->groupBy('tanggal_pengunjung')
+            ->get();
+
+        $total_pengunjung_pbg = [];
+        foreach ($pengunjung_pbg as $key => $value) {
+            $total_pengunjung_pbg[] = $value->total_pengunjung;
+        }
+
+        // cilacap
+        $pengunjung_cilacap = AntrianPengunjung::select(DB::raw('count(*) AS total_pengunjung'), DB::raw('DAY(tanggal) AS tanggal_pengunjung'))
+            ->where('master_cabang_id', 6)
+            ->where('tanggal', 'like', '%'.$bulan_sekarang.'%')
+            ->groupBy('tanggal_pengunjung')
+            ->get();
+
+        $total_pengunjung_cilacap = [];
+        foreach ($pengunjung_cilacap as $key => $value) {
+            $total_pengunjung_cilacap[] = $value->total_pengunjung;
+        }
+
+        // bumiayu
+        $pengunjung_bumiayu = AntrianPengunjung::select(DB::raw('count(*) AS total_pengunjung'), DB::raw('DAY(tanggal) AS tanggal_pengunjung'))
+            ->where('master_cabang_id', 11)
+            ->where('tanggal', 'like', '%'.$bulan_sekarang.'%')
+            ->groupBy('tanggal_pengunjung')
+            ->get();
+
+        $total_pengunjung_bumiayu = [];
+        foreach ($pengunjung_bumiayu as $key => $value) {
+            $total_pengunjung_bumiayu[] = $value->total_pengunjung;
+        }
+
+        return response()->json([
+            'tanggal_pengunjung' => $tanggal_pengunjung,
+            'total_pengunjung_situmpur' => $total_pengunjung_situmpur,
+            'total_pengunjung_dkw' => $total_pengunjung_dkw,
+            'total_pengunjung_hr' => $total_pengunjung_hr,
+            'total_pengunjung_pbg' => $total_pengunjung_pbg,
+            'total_pengunjung_cilacap' => $total_pengunjung_cilacap,
+            'total_pengunjung_bumiayu' => $total_pengunjung_bumiayu
+        ]);
+    }
+
+    public function antrianPengunjung($id)
     {
         $customers = AntrianPengunjung::select(DB::raw('nama_customer, telepon'), DB::raw('MAX(tanggal) AS tanggal_terakhir_pengunjung'), DB::raw('count(*) AS total'))
             ->where('master_cabang_id', $id)
@@ -54,7 +143,7 @@ class HomeController extends Controller
         ]);
     }
 
-    public function antrianPengunjung($id)
+    public function antrianPengunjungGrafik($id)
     {
         // data pengunjung bulan ini--------------------------------------------------------------------
         $bulan_sekarang = date("Y-m");
