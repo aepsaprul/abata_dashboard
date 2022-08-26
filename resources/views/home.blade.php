@@ -61,7 +61,7 @@
                 type: 'get',
                 success: function (response) {
                     const ctx = document.getElementById('myChart').getContext('2d');
-                    let data_labels = response.tanggal_pengunjung;
+                    let data_labels = response.tanggal;
                     const myChart = new Chart(ctx, {
                         type: 'line',
                         data: {

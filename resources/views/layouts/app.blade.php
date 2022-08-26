@@ -26,7 +26,7 @@
             <div class="container-fluid">
                 <a href="#" class="navbar-brand">
                     <img src="{{ asset('assets/logo-biru.png') }}" alt="Logo" class="brand-image" style="opacity: .8">
-                    <span class="brand-text font-weight-light">Abata Group</span>
+                    <span class="brand-text font-weight-light">Dashboard Abata Group</span>
                 </a>
 
                 <!-- Right navbar links -->
