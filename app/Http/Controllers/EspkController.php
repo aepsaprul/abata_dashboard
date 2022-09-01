@@ -10,9 +10,8 @@ class EspkController extends Controller
 {
     public function grafik()
     {
-        // $bulan_sekarang = date("Y-m");
-        $bulan_sekarang = date("2022-05");
-        $tanggal_sekarang = date("30");
+        $bulan_sekarang = date("Y-m");
+        $tanggal_sekarang = date("d");
 
         $tanggal = [];
         for ($i=1; $i <= $tanggal_sekarang ; $i++) {
