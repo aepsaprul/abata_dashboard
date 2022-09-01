@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AntrianController;
+use App\Http\Controllers\EspkController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -26,8 +28,11 @@ Auth::routes([
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::group(['middleware' => 'auth'], function () {
-    Route::get('antrian', [HomeController::class, 'antrian'])->name('home.antrian');
-    Route::get('antrian/grafik', [HomeController::class, 'antrianGrafik'])->name('home.antrian.grafik');
-    Route::get('antrian/{id}/pengunjung', [HomeController::class, 'antrianPengunjung'])->name('home.antrian.pengunjung');
-    Route::get('antrian/{id}/pengunjung_grafik', [HomeController::class, 'antrianGrafik'])->name('home.antrian.pengunjung_grafik');
+    // Route::get('antrian', [HomeController::class, 'antrian'])->name('home.antrian');
+    Route::get('antrian/grafik', [AntrianController::class, 'grafik'])->name('antrian.grafik');
+    // Route::get('antrian/{id}/pengunjung', [HomeController::class, 'antrianPengunjung'])->name('home.antrian.pengunjung');
+    // Route::get('antrian/{id}/pengunjung_grafik', [HomeController::class, 'antrianGrafik'])->name('home.antrian.pengunjung_grafik');
+
+    // espk
+    Route::get('espk/grafik', [EspkController::class, 'grafik'])->name('espk.grafik');
 });

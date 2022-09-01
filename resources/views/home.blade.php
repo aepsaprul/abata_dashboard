@@ -23,7 +23,21 @@
                         </div>
                         <div class="card-body">
                             <div class="chart">
-                                <canvas id="myChart" width="1000" height="200"></canvas>
+                                <canvas id="antrianChart" width="1000" height="200"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- data espk -->
+                <div class="col-lg-12 col-md-12 col-sm-12 col-12">
+                    <div class="card mt-4">
+                        <div class="card-header">
+                            <h6>Data Pesanan ESPK</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart">
+                                <canvas id="espkCart" width="1000" height="200"></canvas>
                             </div>
                         </div>
                     </div>
@@ -57,10 +71,10 @@
         pengunjung();
         function pengunjung() {
             $.ajax({
-                url: "{{ URL::route('home.antrian.grafik') }}",
+                url: "{{ URL::route('antrian.grafik') }}",
                 type: 'get',
                 success: function (response) {
-                    const ctx = document.getElementById('myChart').getContext('2d');
+                    const ctx = document.getElementById('antrianChart').getContext('2d');
                     let data_labels = response.tanggal;
                     const myChart = new Chart(ctx, {
                         type: 'line',
@@ -125,6 +139,100 @@
                                 {
                                     label: 'Bumiayu',
                                     data: response.total_pengunjung_bumiayu,
+                                    backgroundColor: [
+                                        '#637999'
+                                    ],
+                                    borderColor: [
+                                        '#637999'
+                                    ],
+                                    borderWidth: 1
+                                }
+                            ]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+                }
+            })
+        }
+
+        espk();
+        function espk() {
+            $.ajax({
+                url: "{{ URL::route('espk.grafik') }}",
+                type: 'get',
+                success: function (response) {
+                    console.log(response);
+                    const ctx = document.getElementById('espkCart').getContext('2d');
+                    let data_labels = response.tanggal;
+                    const myChart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: data_labels,
+                            datasets: [
+                                {
+                                    label: 'Situmpur',
+                                    data: response.total_pesanan_situmpur,
+                                    backgroundColor: [
+                                        '#cc0000'
+                                    ],
+                                    borderColor: [
+                                        '#cc0000'
+                                    ],
+                                    borderWidth: 1
+                                },
+                                {
+                                    label: 'Dukuh Waluh',
+                                    data: response.total_pesanan_dkw,
+                                    backgroundColor: [
+                                        '#30845e'
+                                    ],
+                                    borderColor: [
+                                        '#30845e'
+                                    ],
+                                    borderWidth: 1
+                                },
+                                {
+                                    label: 'HR Bunyamin',
+                                    data: response.total_pesanan_hr,
+                                    backgroundColor: [
+                                        '#ffe800'
+                                    ],
+                                    borderColor: [
+                                        '#ffe800'
+                                    ],
+                                    borderWidth: 1
+                                },
+                                {
+                                    label: 'Purbalingga',
+                                    data: response.total_pesanan_pbg,
+                                    backgroundColor: [
+                                        '#123abc'
+                                    ],
+                                    borderColor: [
+                                        '#123abc'
+                                    ],
+                                    borderWidth: 1
+                                },
+                                {
+                                    label: 'Cilacap',
+                                    data: response.total_pesanan_cilacap,
+                                    backgroundColor: [
+                                        '#ff3e99'
+                                    ],
+                                    borderColor: [
+                                        '#ff3e99'
+                                    ],
+                                    borderWidth: 1
+                                },
+                                {
+                                    label: 'Bumiayu',
+                                    data: response.total_pesanan_bumiayu,
                                     backgroundColor: [
                                         '#637999'
                                     ],
