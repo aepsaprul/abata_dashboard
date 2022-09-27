@@ -19,7 +19,39 @@
                 <div class="col-lg-12 col-md-12 col-sm-12 col-12">
                     <div class="card mt-4">
                         <div class="card-header">
-                            <h6>Data Antrian</h6>
+                          <div class="d-flex justify-content-between">
+                            <div>
+                              <span class="font-weight-bold">Data Antrian</span>
+                            </div>
+                            <div>
+                              <form action="#" method="post">
+                                @csrf
+                                <div class="row">
+                                  <div class="col-3">
+                                    <span for="activity_plan_cabang_id">Cabang</span>
+                                    <select name="activity_plan_cabang_id" id="activity_plan_cabang_id" class="form-control form-control-sm">
+                                      <option value="">--Pilih Cabang--</option>
+                                      @foreach ($cabangs as $item)
+                                          <option value="{{ $item->id }}">{{ $item->nama_cabang }}</option>
+                                      @endforeach
+                                    </select>
+                                  </div>
+                                  <div class="col-3">
+                                    <span for="activity_plan_start_date">Start Date</span>
+                                    <input type="date" name="activity_plan_start_date" id="activity_plan_start_date" class="form-control form-control-sm" value="{{ date('Y-m-') }}01" required>
+                                  </div>
+                                  <div class="col-3">
+                                    <span for="activity_plan_end_date">End Date</span>
+                                    <input type="date" name="activity_plan_end_date" id="activity_plan_end_date" class="form-control form-control-sm" value="{{ date('Y-m-d') }}" required>
+                                  </div>
+                                  <div class="col-3">
+                                    <span for="">Aksi</span>
+                                    <button type="submit" class="btn btn-success btn-sm btn-block">Excel</button>
+                                  </div>
+                                </div>
+                              </form>
+                            </div>
+                          </div>
                         </div>
                         <div class="card-body">
                             <div class="chart">
@@ -33,7 +65,39 @@
                 <div class="col-lg-12 col-md-12 col-sm-12 col-12">
                     <div class="card mt-4">
                         <div class="card-header">
-                            <h6>Data Pesanan ESPK</h6>
+                          <div class="d-flex justify-content-between">
+                            <div>
+                              <span class="font-weight-bold">Data Pesanan ESPK</span>
+                            </div>
+                            <div>
+                              <form action="#" method="post">
+                                @csrf
+                                <div class="row">
+                                  <div class="col-3">
+                                    <span for="activity_plan_cabang_id">Cabang</span>
+                                    <select name="activity_plan_cabang_id" id="activity_plan_cabang_id" class="form-control form-control-sm">
+                                      <option value="">--Pilih Cabang--</option>
+                                      @foreach ($cabangs as $item)
+                                          <option value="{{ $item->id }}">{{ $item->nama_cabang }}</option>
+                                      @endforeach
+                                    </select>
+                                  </div>
+                                  <div class="col-3">
+                                    <span for="activity_plan_start_date">Start Date</span>
+                                    <input type="date" name="activity_plan_start_date" id="activity_plan_start_date" class="form-control form-control-sm" value="{{ date('Y-m-') }}01" required>
+                                  </div>
+                                  <div class="col-3">
+                                    <span for="activity_plan_end_date">End Date</span>
+                                    <input type="date" name="activity_plan_end_date" id="activity_plan_end_date" class="form-control form-control-sm" value="{{ date('Y-m-d') }}" required>
+                                  </div>
+                                  <div class="col-3">
+                                    <span for="">Aksi</span>
+                                    <button type="submit" class="btn btn-success btn-sm btn-block">Excel</button>
+                                  </div>
+                                </div>
+                              </form>
+                            </div>
+                          </div>
                         </div>
                         <div class="card-body">
                             <div class="chart">
