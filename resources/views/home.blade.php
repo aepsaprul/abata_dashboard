@@ -24,12 +24,12 @@
                               <span class="font-weight-bold">Data Antrian</span>
                             </div>
                             <div>
-                              <form action="#" method="post">
+                              <form action="{{ route('antrian.excel') }}" method="post">
                                 @csrf
                                 <div class="row">
                                   <div class="col-3">
-                                    <span for="activity_plan_cabang_id">Cabang</span>
-                                    <select name="activity_plan_cabang_id" id="activity_plan_cabang_id" class="form-control form-control-sm">
+                                    <span for="cabang_id">Cabang</span>
+                                    <select name="cabang_id" id="cabang_id" class="form-control form-control-sm">
                                       <option value="">--Pilih Cabang--</option>
                                       @foreach ($cabangs as $item)
                                           <option value="{{ $item->id }}">{{ $item->nama_cabang }}</option>
@@ -37,12 +37,35 @@
                                     </select>
                                   </div>
                                   <div class="col-3">
-                                    <span for="activity_plan_start_date">Start Date</span>
-                                    <input type="date" name="activity_plan_start_date" id="activity_plan_start_date" class="form-control form-control-sm" value="{{ date('Y-m-') }}01" required>
+                                    <span for="tahun">Tahun</span>
+                                    <select name="tahun" id="tahun" class="form-control form-control-sm">
+                                      <option value="">--Pilih Tahun--</option>
+                                      @for ($c = 2022; $c <= 2024; $c += 1)
+                                        <option value={{ $c }} @if (date('Y') == $c) selected @endif > {{ $c }} </option>
+                                      @endfor
+                                    </select>
                                   </div>
                                   <div class="col-3">
-                                    <span for="activity_plan_end_date">End Date</span>
-                                    <input type="date" name="activity_plan_end_date" id="activity_plan_end_date" class="form-control form-control-sm" value="{{ date('Y-m-d') }}" required>
+                                    <span for="bulan">Bulan</span>
+                                    <select name="bulan" id="bulan" class="form-control form-control-sm">
+                                      <option value="">--Pilih Bulan--</option>
+                                      @php
+                                        $bulan = array("Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember");
+                                        $jumlah_bulan = count($bulan);
+                                      @endphp
+                                      @for ($d = 0; $d < $jumlah_bulan; $d += 1)
+                                        @if ($d < 9)
+                                          @php
+                                            $value = '0' . $d + 1;
+                                          @endphp
+                                        @else
+                                          @php
+                                            $value = $d + 1;
+                                          @endphp
+                                        @endif
+                                        <option value={{ $value }} @if (date('m') == $d+1) selected @endif > {{ $bulan[$d] }} </option>
+                                      @endfor
+                                    </select>
                                   </div>
                                   <div class="col-3">
                                     <span for="">Aksi</span>

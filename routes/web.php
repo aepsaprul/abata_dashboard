@@ -32,6 +32,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('antrian/grafik', [AntrianController::class, 'grafik'])->name('antrian.grafik');
     // Route::get('antrian/{id}/pengunjung', [HomeController::class, 'antrianPengunjung'])->name('home.antrian.pengunjung');
     // Route::get('antrian/{id}/pengunjung_grafik', [HomeController::class, 'antrianGrafik'])->name('home.antrian.pengunjung_grafik');
+    Route::post('antrian/excel', [AntrianController::class, 'excel'])->name('antrian.excel');
 
     // espk
     Route::get('espk/grafik', [EspkController::class, 'grafik'])->name('espk.grafik');

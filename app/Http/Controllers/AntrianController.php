@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\AntrianExport;
 use App\Models\AntrianPengunjung;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class AntrianController extends Controller
 {
@@ -20,14 +22,14 @@ class AntrianController extends Controller
 
         // situmpur
         $pengunjung_situmpur = AntrianPengunjung::select(DB::raw('count(*) AS total_pengunjung'), DB::raw('DAY(tanggal) AS tanggal_pengunjung'))
-            ->where('master_cabang_id', 2)
-            ->where('tanggal', 'like', '%'.$bulan_sekarang.'%')
-            ->groupBy('tanggal_pengunjung')
-            ->get();
+          ->where('master_cabang_id', 2)
+          ->where('tanggal', 'like', '%'.$bulan_sekarang.'%')
+          ->groupBy('tanggal_pengunjung')
+          ->get();
 
         $tanggal_pengunjung_situmpur = [];
         foreach ($pengunjung_situmpur as $key => $value) {
-            $tanggal_pengunjung_situmpur[] = $value->tanggal_pengunjung;
+          $tanggal_pengunjung_situmpur[] = $value->tanggal_pengunjung;
         }
 
         // dkw
@@ -173,6 +175,15 @@ class AntrianController extends Controller
             'total_pengunjung_cilacap' => $cilacap,
             'total_pengunjung_bumiayu' => $bumiayu
         ]);
+    }
+
+    public function excel(Request $request)
+    {
+      $tahun = $request->tahun;
+      $bulan = $request->bulan;
+      $cabang_id = $request->cabang_id;
+
+      return Excel::download(new AntrianExport($tahun, $bulan, $cabang_id), 'antrian.xlsx');
     }
 
     // public function antrianPengunjung($id)
