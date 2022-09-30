@@ -29,6 +29,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::group(['middleware' => 'auth'], function () {
     // Route::get('antrian', [HomeController::class, 'antrian'])->name('home.antrian');
+    Route::get('antrian', [AntrianController::class, 'index'])->name('antrian.index');
     Route::get('antrian/grafik', [AntrianController::class, 'grafik'])->name('antrian.grafik');
     // Route::get('antrian/{id}/pengunjung', [HomeController::class, 'antrianPengunjung'])->name('home.antrian.pengunjung');
     // Route::get('antrian/{id}/pengunjung_grafik', [HomeController::class, 'antrianGrafik'])->name('home.antrian.pengunjung_grafik');

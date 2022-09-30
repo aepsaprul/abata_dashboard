@@ -24,7 +24,7 @@
                               <span class="font-weight-bold">Data Antrian</span>
                             </div>
                             <div>
-                              <form action="{{ route('antrian.excel') }}" method="post">
+                              {{-- <form action="{{ route('antrian.excel') }}" method="post">
                                 @csrf
                                 <div class="row">
                                   <div class="col-3">
@@ -72,7 +72,7 @@
                                     <button type="submit" class="btn btn-success btn-sm btn-block">Excel</button>
                                   </div>
                                 </div>
-                              </form>
+                              </form> --}}
                             </div>
                           </div>
                         </div>
@@ -93,7 +93,7 @@
                               <span class="font-weight-bold">Data Pesanan ESPK</span>
                             </div>
                             <div>
-                              <form action="#" method="post">
+                              {{-- <form action="#" method="post">
                                 @csrf
                                 <div class="row">
                                   <div class="col-3">
@@ -118,7 +118,7 @@
                                     <button type="submit" class="btn btn-success btn-sm btn-block">Excel</button>
                                   </div>
                                 </div>
-                              </form>
+                              </form> --}}
                             </div>
                           </div>
                         </div>
