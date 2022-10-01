@@ -42,6 +42,13 @@
                         <span for="cabang_id">Cabang</span>
                         <select name="cabang_id" id="cabang_id" class="form-control form-control-sm">
                           <option value="">--Pilih Cabang--</option>
+                          @foreach ($cabang_antrians as $item_cabang_antrian)
+                            @foreach ($cabangs as $item_cabang)
+                              @if ($item_cabang->id == $item_cabang_antrian->master_cabang)
+                                <option value="{{ $item_cabang->id }}">{{ $item_cabang->nama_cabang }}</option>
+                              @endif
+                            @endforeach          
+                          @endforeach
                         </select>
                       </div>
                       <div class="col-3">
@@ -54,7 +61,7 @@
                       </div>
                       <div class="col-3">
                         <span for="">Aksi</span>
-                        <button type="button" class="btn btn-primary btn-sm btn-block"><i class="fas fa-search"></i> Cari</button>
+                        <button type="button" class="btn btn-primary btn-sm btn-block tombol-cari"><i class="fas fa-search"></i> Cari</button>
                       </div>
                     </div>
                   </div>
@@ -74,7 +81,7 @@
                           <div style="width: 200px;" class="border border-primary px-2 py-1 text-center">
                             @foreach ($cabangs as $item_cabang)
                               @if ($item_cabang->id == $item_cabang_antrian->master_cabang)
-                                {{ $item_cabang->nama_cabang }} - {{ $item_cabang_antrian->master_cabang }}                                  
+                                {{ $item_cabang->nama_cabang }} {{--  - {{ $item_cabang_antrian->master_cabang }} --}}
                               @endif
                             @endforeach
                           </div>
@@ -84,9 +91,12 @@
                   </table>
                 </div>
                 <div class="col-lg-10 col-md-9 col-sm-8 col-6 overflow-auto">
-                  <table>
+                  <div class="overlay-wrapper d-none">
+                    <div class="overlay bg-light"><i class="fas fa-3x fa-sync-alt fa-spin"></i><div class="text-bold pt-2"></div></div>
+                  </div>
+                  <table id="tabel_total_antrian">
                     <tr>
-                      {{-- <td></td> --}}
+                      <td></td>
                       @foreach ($total_tanggal as $item_date)
                         <td>
                           <div style="width: 100px;" class="border border-secondary bg-secondary px-2 py-1 mb-2 text-center">
@@ -102,11 +112,11 @@
                     </tr>
                     @foreach ($cabang_antrians as $item_cabang_antrian)
                       <tr>
-                        {{-- <td>
-                          <div style="width: 100px;" class="border border-secondary px-2 py-1 text-center">
-                            {{ $item_cabang_antrian->master_cabang }}
+                        <td style="visibility: hidden;">
+                          <div style="width: 1px;" class="border border-secondary py-1 text-center">
+                            -
                           </div>
-                        </td> --}}
+                        </td>
 
                         {{-- situmpur --}}
                         @if ($item_cabang_antrian->master_cabang == 2)
@@ -314,111 +324,141 @@
 
 <script>
     $(document).ready(function () {
+      $.ajaxSetup({
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+      });
+      
+      let cabang_id = $('#cabang_id').val();
+
+      $("#tabel_customer").DataTable({
+          'ordering': false
+      });
+
+      $("#tabel_customer_terakhir").DataTable({
+          'ordering': false
+      });
+
+      $('.tombol-cari').on('click', function () {
         let cabang_id = $('#cabang_id').val();
+        let start_date = $('#start_date').val();
+        let end_date = $('#end_date').val();
+        $('#tabel_total_antrian').empty();        
 
-        $("#tabel_customer").DataTable({
-            'ordering': false
-        });
-        $("#tabel_customer_terakhir").DataTable({
-            'ordering': false
-        });
-
-        pengunjung();
-        function pengunjung() {
-            var id = cabang_id;
-            var url = '{{ route("antrian.grafik", ":id") }}';
-            url = url.replace(':id', id);
-
-            $.ajax({
-                url: url,
-                type: 'get',
-                success: function (response) {
-                    const ctx = document.getElementById('myChart').getContext('2d');
-                    let data_labels = response.tanggal_pengunjung;
-                    const myChart = new Chart(ctx, {
-                        type: 'line',
-                        data: {
-                            labels: data_labels,
-                            datasets: [{
-                                label: 'Data Pengunjung',
-                                data: response.total_pengunjung,
-                                backgroundColor: [
-                                    'rgba(255, 99, 132, 0.2)',
-                                    'rgba(54, 162, 235, 0.2)',
-                                    'rgba(255, 206, 86, 0.2)',
-                                    'rgba(75, 192, 192, 0.2)',
-                                    'rgba(153, 102, 255, 0.2)',
-                                    'rgba(255, 159, 64, 0.2)'
-                                ],
-                                borderColor: [
-                                    'rgba(255, 99, 132, 1)'
-                                ],
-                                borderWidth: 1
-                            }]
-                        },
-                        options: {
-                            scales: {
-                                y: {
-                                    beginAtZero: true
-                                }
-                            }
-                        }
-                    });
-                }
-            })
+        let formData = {
+          cabang_id: cabang_id,
+          start_date: start_date,
+          end_date: end_date
         }
 
-        pengunjungShift();
-        function pengunjungShift() {
-            var id = cabang_id;
-            var url = '{{ route("antrian.grafik", ":id") }}';
-            url = url.replace(':id', id);
+        $.ajax({
+          url: "{{ URL::route('antrian.cari') }}",
+          type: 'post',
+          data: formData,
+          beforeSend: function () {
+            $('.overlay-wrapper').removeClass('d-none');
+          },
+          success: function (response) {
+            console.log(response);
+            let data = '' +
+                '<tr>' +
+                  '<td></td>';
+                  
+                  $.each(response.total_tanggal, function (index, item) {
+                    data += '<td>' +
+                      '<div style="width: 100px;" class="border border-secondary bg-secondary px-2 py-1 mb-2 text-center">' +
+                        item
+                      '</div>' +
+                    '</td>';
+                  })
+                data += '</tr>';
 
-            $.ajax({
-                url: url,
-                type: 'get',
-                success: function (response) {
-                    const ctx = document.getElementById('chart_shif').getContext('2d');
-                    let data_labels = response.tanggal_customer_shift_1;
-                    const myChart = new Chart(ctx, {
-                        type: 'line',
-                        data: {
-                            labels: data_labels,
-                            datasets: [{
-                                    label: 'Pengunjung Shift 1',
-                                    data: response.pengunjung_shift_1,
-                                    backgroundColor: [
-                                        '#0d9170'
-                                    ],
-                                    borderColor: [
-                                        '#0d9170'
-                                    ],
-                                    borderWidth: 1
-                                },
-                                {
-                                    label: 'Pengunjung Shift 2',
-                                    data: response.pengunjung_shift_2,
-                                    backgroundColor: [
-                                        '#ff80dd'
-                                    ],
-                                    borderColor: [
-                                        '#ff80dd'
-                                    ],
-                                    borderWidth: 1
-                                }
-                            ]
-                        },
-                        options: {
-                            scales: {
-                                y: {
-                                    beginAtZero: true
-                                }
-                            }
-                        }
-                    });
-                }
-            })
-        }
+                $.each(response.cabang_antrians, function (index, item_cabang_antrian) {
+                  data += '<tr>' +
+                    '<td style="visibility: hidden;">' +
+                      '<div style="width: 1px;" class="border border-secondary py-1 text-center">' +
+                        '-' +
+                      '</div>' +
+                    '</td>';
+
+                    // situmpur
+                    if (item_cabang_antrian.master_cabang == 2) {
+                      $.each(response.total_situmpur, function (index, item_total_situmpur) {
+                        data += '<td>' +
+                          '<div style="width: 100px;" class="border border-secondary px-2 py-1 text-center">' +
+                            item_total_situmpur
+                          '</div>' +
+                        '</td>';
+                      })
+                    }
+
+                    // dkw
+                    else if (item_cabang_antrian.master_cabang == 3) {
+                      $.each(response.total_dkw, function (index, item_total_dkw) {
+                        data += '<td>' +
+                          '<div style="width: 100px;" class="border border-secondary px-2 py-1 text-center">' +
+                            item_total_dkw
+                          '</div>' +
+                        '</td>';
+                      })
+                    }
+
+                    // hr
+                    else if (item_cabang_antrian.master_cabang == 4) {
+                      $.each(response.total_hr, function (index, item_total_hr) {
+                        data += '<td>' +
+                          '<div style="width: 100px;" class="border border-secondary px-2 py-1 text-center">' +
+                            item_total_hr
+                          '</div>' +
+                        '</td>';
+                      })
+                    }
+
+                    // pbg
+                    else if (item_cabang_antrian.master_cabang == 5) {
+                      $.each(response.total_pbg, function (index, item_total_pbg) {
+                        data += '<td>' +
+                          '<div style="width: 100px;" class="border border-secondary px-2 py-1 text-center">' +
+                            item_total_pbg
+                          '</div>' +
+                        '</td>';
+                      })
+                    }
+
+                    // cilacap
+                    else if (item_cabang_antrian.master_cabang == 6) {
+                      $.each(response.total_cilacap, function (index, item_total_cilacap) {
+                        data += '<td>' +
+                          '<div style="width: 100px;" class="border border-secondary px-2 py-1 text-center">' +
+                            item_total_cilacap
+                          '</div>' +
+                        '</td>';
+                      })
+                    }
+
+                    // bumiayu
+                    else if (item_cabang_antrian.master_cabang == 11) {
+                      $.each(response.total_bumiayu, function (index, item_total_bumiayu) {
+                        data += '<td>' +
+                          '<div style="width: 100px;" class="border border-secondary px-2 py-1 text-center">' +
+                            item_total_bumiayu
+                          '</div>' +
+                        '</td>';
+                      })
+                    } 
+                    
+                    else {
+                      
+                    }
+                })
+                data += '</tr>';
+
+            $('#tabel_total_antrian').append(data);
+            $('.overlay-wrapper').addClass('d-none');
+          }
+        })
+      })
     })
 </script>
 

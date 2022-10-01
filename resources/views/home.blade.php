@@ -254,7 +254,6 @@
                 url: "{{ URL::route('espk.grafik') }}",
                 type: 'get',
                 success: function (response) {
-                    console.log(response);
                     const ctx = document.getElementById('espkCart').getContext('2d');
                     let data_labels = response.tanggal;
                     const myChart = new Chart(ctx, {

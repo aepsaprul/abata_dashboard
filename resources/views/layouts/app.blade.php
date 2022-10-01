@@ -12,6 +12,9 @@
   <link href="{{ asset('assets/logo-daun.png') }}" rel="icon" type="image/x-icon">
   <title>{{ config('app.name', 'Abata Dashboard') }}</title>
 
+  <!-- CSRF Token -->
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="{{ asset('themes/plugins/fontawesome-free/css/all.min.css') }}">
   <!-- Theme style -->
