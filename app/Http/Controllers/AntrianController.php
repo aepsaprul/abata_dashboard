@@ -419,10 +419,8 @@ class AntrianController extends Controller
 
   public function grafik()
   {
-    // $bulan_sekarang = date("Y-m");
-    // $tanggal_sekarang = date("d");
-    $bulan_sekarang = date("2022-09");
-    $tanggal_sekarang = 27;
+    $bulan_sekarang = date("Y-m");
+    $tanggal_sekarang = date("d");
 
     $tanggal_pengunjung = [];
     for ($i=1; $i <= $tanggal_sekarang ; $i++) {
