@@ -71,14 +71,14 @@
             <div class="card-body">
               <div class="row">
                 <div class="col-lg-2 col-md-3 col-sm-4 col-6">
-                  <table>
+                  <table style="width: 100%;">
                     <tr>
-                      <td><div style="width: 200px;" class="border border-secondary bg-secondary px-2 py-1 mb-2 text-center">Cabang</div></td>
+                      <td><div style="width: 100%;" class="border border-secondary bg-secondary px-2 py-1 mb-2 text-center">Cabang</div></td>
                     </tr>
                     @foreach ($cabang_antrians as $item_cabang_antrian)
                       <tr>
                         <td>
-                          <div style="width: 200px;" class="border border-primary px-2 py-1 text-center">
+                          <div style="width: 100%;" class="border border-primary px-2 py-1 text-center">
                             @foreach ($cabangs as $item_cabang)
                               @if ($item_cabang->id == $item_cabang_antrian->master_cabang)
                                 {{ $item_cabang->nama_cabang }} {{--  - {{ $item_cabang_antrian->master_cabang }} --}}
