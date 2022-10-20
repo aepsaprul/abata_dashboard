@@ -117,91 +117,122 @@ class AntrianController extends Controller
       $tanggal_pengunjung_bumiayu[] = $value->tanggal_pengunjung;
     }
 
+    // total
+    $pengunjung_total = AntrianPengunjung::select(DB::raw('count(*) AS total_pengunjung'), DB::raw('DAY(tanggal) AS tanggal_pengunjung'))
+      ->where('tanggal', 'like', '%'.$bulan_sekarang.'%')
+      ->groupBy('tanggal_pengunjung')
+      ->get();
+
+    $tanggal_pengunjung_total = [];
+    foreach ($pengunjung_total as $key => $value) {
+      $tanggal_pengunjung_total[] = $value->tanggal_pengunjung;
+    }
+
     $situmpur = [];
     $dkw = [];
     $hr = [];
     $pbg = [];
     $cilacap = [];
     $bumiayu = [];
+    $total = [];
     foreach ($tanggal_pengunjung as $key => $value) {
-        // data situmpur
-        if (in_array($value, $tanggal_pengunjung_situmpur)) {
-          foreach ($pengunjung_situmpur as $key => $value_situmpur) {
-            if ($value_situmpur->tanggal_pengunjung == $value) {
-              $situmpur[] = $value_situmpur->total_pengunjung;
-            }
+      // data situmpur
+      if (in_array($value, $tanggal_pengunjung_situmpur)) {
+        foreach ($pengunjung_situmpur as $key => $value_situmpur) {
+          if ($value_situmpur->tanggal_pengunjung == $value) {
+            $situmpur[] = $value_situmpur->total_pengunjung;
           }
-        } else {
-          $situmpur[] = 0;
         }
+      } else {
+        $situmpur[] = 0;
+      }
 
-        // data dkw
-        if (in_array($value, $tanggal_pengunjung_dkw)) {
-          foreach ($pengunjung_dkw as $key => $value_dkw) {
-            if ($value_dkw->tanggal_pengunjung == $value) {
-              $dkw[] = $value_dkw->total_pengunjung;
-            }
+      // data dkw
+      if (in_array($value, $tanggal_pengunjung_dkw)) {
+        foreach ($pengunjung_dkw as $key => $value_dkw) {
+          if ($value_dkw->tanggal_pengunjung == $value) {
+            $dkw[] = $value_dkw->total_pengunjung;
           }
-        } else {
-          $dkw[] = 0;
         }
+      } else {
+        $dkw[] = 0;
+      }
 
-        // data hr
-        if (in_array($value, $tanggal_pengunjung_hr)) {
-          foreach ($pengunjung_hr as $key => $value_hr) {
-            if ($value_hr->tanggal_pengunjung == $value) {
-              $hr[] = $value_hr->total_pengunjung;
-            }
+      // data hr
+      if (in_array($value, $tanggal_pengunjung_hr)) {
+        foreach ($pengunjung_hr as $key => $value_hr) {
+          if ($value_hr->tanggal_pengunjung == $value) {
+            $hr[] = $value_hr->total_pengunjung;
           }
-        } else {
-            $hr[] = 0;
         }
+      } else {
+          $hr[] = 0;
+      }
 
-        // data pbg
-        if (in_array($value, $tanggal_pengunjung_pbg)) {
-          foreach ($pengunjung_pbg as $key => $value_pbg) {
-            if ($value_pbg->tanggal_pengunjung == $value) {
-              $pbg[] = $value_pbg->total_pengunjung;
-            }
+      // data pbg
+      if (in_array($value, $tanggal_pengunjung_pbg)) {
+        foreach ($pengunjung_pbg as $key => $value_pbg) {
+          if ($value_pbg->tanggal_pengunjung == $value) {
+            $pbg[] = $value_pbg->total_pengunjung;
           }
-        } else {
-          $pbg[] = 0;
         }
+      } else {
+        $pbg[] = 0;
+      }
 
-        // data bumiayu
-        if (in_array($value, $tanggal_pengunjung_bumiayu)) {
-          foreach ($pengunjung_bumiayu as $key => $value_bumiayu) {
-            if ($value_bumiayu->tanggal_pengunjung == $value) {
-              $bumiayu[] = $value_bumiayu->total_pengunjung;
-            }
+      // data bumiayu
+      if (in_array($value, $tanggal_pengunjung_bumiayu)) {
+        foreach ($pengunjung_bumiayu as $key => $value_bumiayu) {
+          if ($value_bumiayu->tanggal_pengunjung == $value) {
+            $bumiayu[] = $value_bumiayu->total_pengunjung;
           }
-        } else {
-          $bumiayu[] = 0;
         }
+      } else {
+        $bumiayu[] = 0;
+      }
 
-        // data cilacap
-        if (in_array($value, $tanggal_pengunjung_cilacap)) {
-          foreach ($pengunjung_cilacap as $key => $value_cilacap) {
-            if ($value_cilacap->tanggal_pengunjung == $value) {
-              $cilacap[] = $value_cilacap->total_pengunjung;
-            }
+      // data cilacap
+      if (in_array($value, $tanggal_pengunjung_cilacap)) {
+        foreach ($pengunjung_cilacap as $key => $value_cilacap) {
+          if ($value_cilacap->tanggal_pengunjung == $value) {
+            $cilacap[] = $value_cilacap->total_pengunjung;
           }
-        } else {
-          $cilacap[] = 0;
         }
+      } else {
+        $cilacap[] = 0;
+      }
+
+      // data total
+      if (in_array($value, $tanggal_pengunjung_total)) {
+        foreach ($pengunjung_total as $key => $value_total) {
+          if ($value_total->tanggal_pengunjung == $value) {
+            $total[] = $value_total->total_pengunjung;
+          }
+        }
+      } else {
+        $total[] = 0;
+      }
     }
-    // dd($situmpur);
+    // dd($total);
     return view('pages.antrian.index', [
       'bulan' => $bulan,
       'total_tanggal' => $total_tanggal,
       'cabang_antrians' => $this->cabang_antrian,
       'cabangs' => $this->cabang,
       'total_situmpur' => $situmpur,
+      'jumlah_total_situmpur' => array_sum($situmpur),
       'total_dkw' => $dkw,
+      'jumlah_total_dkw' => array_sum($dkw),
       'total_hr' => $hr,
+      'jumlah_total_hr' => array_sum($hr),
       'total_pbg' => $pbg,
+      'jumlah_total_pbg' => array_sum($pbg),
       'total_cilacap' => $cilacap,
-      'total_bumiayu' => $bumiayu
+      'jumlah_total_cilacap' => array_sum($cilacap),
+      'total_bumiayu' => $bumiayu,
+      'jumlah_total_bumiayu' => array_sum($bumiayu),
+      'total' => $total,
+      'grand_total' => array_sum($situmpur) + array_sum($dkw) + array_sum($hr) + array_sum($pbg) + array_sum($cilacap) + array_sum($bumiayu)
     ]);
   }
 
@@ -297,12 +328,25 @@ class AntrianController extends Controller
       $tanggal_pengunjung_bumiayu[] = $value->tanggal_pengunjung;
     }
 
+    // total
+    $pengunjung_total = AntrianPengunjung::select(DB::raw('count(*) AS total_pengunjung'), DB::raw('DATE(tanggal) AS tanggal_pengunjung'))
+      ->whereBetween('tanggal', [$start_date . ' 00:00:00', $end_date . ' 23:59:00'])
+      ->groupBy('tanggal_pengunjung')
+      ->get();
+
+    $tanggal_pengunjung_total = [];
+    foreach ($pengunjung_total as $key => $value) {
+      $tanggal_pengunjung_total[] = $value->tanggal_pengunjung;
+    }
+
     $situmpur = [];
     $dkw = [];
     $hr = [];
     $pbg = [];
     $cilacap = [];
     $bumiayu = [];
+    $total = [];
+    
     foreach ($tanggal_pengunjung as $key => $value) {
       // data situmpur
       if (in_array($value, $tanggal_pengunjung_situmpur)) {
@@ -369,27 +413,50 @@ class AntrianController extends Controller
       } else {
         $cilacap[] = 0;
       }
+
+      // data total
+      if (in_array($value, $tanggal_pengunjung_total)) {
+        foreach ($pengunjung_total as $key => $value_total) {
+          if ($value_total->tanggal_pengunjung == $value) {
+            $total[] = $value_total->total_pengunjung;
+          }
+        }
+      } else {
+        $total[] = 0;
+      }
     }
 
     if ($cabang_id) {
       if ($cabang_id == 2) {
         $total_pengunjung = 'total_situmpur';
         $data_antrian_cabang = $situmpur;
+        $jumlah_total_pengunjung = 'jumlah_total_situmpur';
+        $data_jumlah_total_pengunjung = array_sum($situmpur);
       } else if ($cabang_id == 3) {
         $total_pengunjung = 'total_dkw';
         $data_antrian_cabang = $dkw;
+        $jumlah_total_pengunjung = 'jumlah_total_dkw';
+        $data_jumlah_total_pengunjung = array_sum($dkw);
       } else if ($cabang_id == 4) {
         $total_pengunjung = 'total_hr';
         $data_antrian_cabang = $hr;
+        $jumlah_total_pengunjung = 'jumlah_total_hr';
+        $data_jumlah_total_pengunjung = array_sum($hr);
       } else if ($cabang_id == 5) {
         $total_pengunjung = 'total_pbg';
         $data_antrian_cabang = $pbg;
+        $jumlah_total_pengunjung = 'jumlah_total_pbg';
+        $data_jumlah_total_pengunjung = array_sum($pbg);
       } else if ($cabang_id == 6) {
         $total_pengunjung = 'total_cilacap';
         $data_antrian_cabang = $cilacap;
+        $jumlah_total_pengunjung = 'jumlah_total_cilacap';
+        $data_jumlah_total_pengunjung = array_sum($cilacap);
       } else {
         $total_pengunjung = 'total_bumiayu';
         $data_antrian_cabang = $bumiayu;
+        $jumlah_total_pengunjung = 'jumlah_total_bumiayu';
+        $data_jumlah_total_pengunjung = array_sum($bumiayu);
       }
       
       return response()->json([
@@ -398,7 +465,9 @@ class AntrianController extends Controller
         'cabang_id' => $cabang_id,
         'cabang_antrians' => $this->cabang_antrian,
         'cabangs' => $this->cabang,
-        $total_pengunjung => $data_antrian_cabang
+        'total' => $total,
+        $total_pengunjung => $data_antrian_cabang,
+        $jumlah_total_pengunjung => $data_jumlah_total_pengunjung
       ]);
     } else {
       return response()->json([
@@ -412,7 +481,15 @@ class AntrianController extends Controller
         'total_hr' => $hr,
         'total_pbg' => $pbg,
         'total_cilacap' => $cilacap,
-        'total_bumiayu' => $bumiayu
+        'total_bumiayu' => $bumiayu,
+        'jumlah_total_situmpur' => array_sum($situmpur),
+        'jumlah_total_dkw' => array_sum($dkw),
+        'jumlah_total_hr' => array_sum($hr),
+        'jumlah_total_pbg' => array_sum($pbg),
+        'jumlah_total_cilacap' => array_sum($cilacap),
+        'jumlah_total_bumiayu' => array_sum($bumiayu),
+        'total' => $total,
+        'grand_total' => array_sum($situmpur) + array_sum($dkw) + array_sum($hr) + array_sum($pbg) + array_sum($cilacap) + array_sum($bumiayu)
       ]);
     }
   }

@@ -71,7 +71,10 @@
             <div class="card-body">
               <div class="row">
                 <div class="col-lg-2 col-md-3 col-sm-4 col-6">
-                  <table style="width: 100%;">
+                  <div class="overlay-wrapper d-none">
+                    <div class="overlay bg-light"><i class="fas fa-3x fa-sync-alt fa-spin"></i><div class="text-bold pt-2"></div></div>
+                  </div>
+                  <table id="tabel_cabang_antrian" style="width: 100%;">
                     <tr>
                       <td><div style="width: 100%;" class="border border-secondary bg-secondary px-2 py-1 mb-2 text-center">Cabang</div></td>
                     </tr>
@@ -82,12 +85,44 @@
                             @foreach ($cabangs as $item_cabang)
                               @if ($item_cabang->id == $item_cabang_antrian->master_cabang)
                                 {{ $item_cabang->nama_cabang }} {{--  - {{ $item_cabang_antrian->master_cabang }} --}}
+                                <span class="float-right font-weight-bold">
+                                  <u>
+                                    @if ($item_cabang->id == 2)
+                                      {{ $jumlah_total_situmpur }}
+                                    @endif
+                                    @if ($item_cabang->id == 3)
+                                      {{ $jumlah_total_dkw }}                                    
+                                    @endif
+                                    @if ($item_cabang->id == 4)
+                                      {{ $jumlah_total_hr }}                                    
+                                    @endif
+                                    @if ($item_cabang->id == 5)
+                                      {{ $jumlah_total_pbg }}                                    
+                                    @endif
+                                    @if ($item_cabang->id == 6)
+                                      {{ $jumlah_total_cilacap }}                                    
+                                    @endif
+                                    @if ($item_cabang->id == 11)
+                                      {{ $jumlah_total_bumiayu }}                                    
+                                    @endif
+                                  </u>
+                                </span>
                               @endif
                             @endforeach
                           </div>
                         </td>
                       </tr>                        
                     @endforeach
+                    <tr>
+                      <td>
+                        <div style="width: 100%;" class="border border-primary px-2 py-1 text-center bg-info">
+                          <b>Total</b>
+                          <span class="float-right font-weight-bold">
+                            <u>{{ $grand_total }}</u>
+                          </span>
+                        </div>
+                      </td>
+                    </tr>
                   </table>
                 </div>
                 <div class="col-lg-10 col-md-9 col-sm-8 col-6 overflow-auto">
@@ -185,6 +220,16 @@
                         @endif
                       </tr>                        
                     @endforeach
+                    <tr>
+                      <td></td>
+                      @foreach ($total as $item_total)
+                        <td>
+                          <div style="width: 100px;" class="border border-secondary px-2 py-1 text-center bg-info">
+                            <b>{{ $item_total }}</b>
+                          </div>
+                        </td>                              
+                      @endforeach
+                    </tr>
                   </table>
                 </div>
               </div>
@@ -344,7 +389,8 @@
         let cabang_id = $('#cabang_id').val();
         let start_date = $('#start_date').val();
         let end_date = $('#end_date').val();
-        $('#tabel_total_antrian').empty();        
+        $('#tabel_total_antrian').empty();     
+        $('#tabel_cabang_antrian').empty();        
 
         let formData = {
           cabang_id: cabang_id,
@@ -361,9 +407,95 @@
           },
           success: function (response) {
             console.log(response);
+            let data_cabang = '' +
+              '<tr>' +
+                '<td><div style="width: 100%;" class="border border-secondary bg-secondary px-2 py-1 mb-2 text-center">Cabang</div></td>' +
+              '</tr>';
+              $.each(response.cabangs, function (index, item) {
+                if (response.cabang_id == null) {
+                  $.each(response.cabang_antrians, function (index_cabang_antrian, item_cabang_antrian) {
+                    if (item_cabang_antrian.master_cabang == item.id) {
+                      data_cabang += '<tr>' +
+                          '<td>' +
+                            '<div style="width: 100%;" class="border border-primary px-2 py-1 text-center">' + item.nama_cabang + 
+                              '<span class="float-right font-weight-bold">' +
+                                  '<u>';
+                                    if (item.id == 2) {
+                                      data_cabang += response.jumlah_total_situmpur;
+                                    }
+                                    if (item.id == 3) {
+                                      data_cabang += response.jumlah_total_dkw;
+                                    }
+                                    if (item.id == 4) {
+                                      data_cabang += response.jumlah_total_hr;
+                                    }
+                                    if (item.id == 5) {
+                                      data_cabang += response.jumlah_total_pbg;
+                                    }
+                                    if (item.id == 6) {
+                                      data_cabang += response.jumlah_total_cilacap;
+                                    }
+                                    if (item.id == 11) {
+                                      data_cabang += response.jumlah_total_bumiayu;
+                                    }
+                                  data_cabang += '</u>' +
+                                '</span>' +
+                            '</div>' +
+                          '</td>' +
+                        '</tr>';                      
+                    }
+                  })
+                } else {
+                  if (item.id == response.cabang_id) {
+                    data_cabang += '<tr>' +
+                      '<td>' +
+                        '<div style="width: 100%;" class="border border-primary px-2 py-1 text-center">' + item.nama_cabang + 
+                          '<span class="float-right font-weight-bold">' +
+                            '<u>';
+                              if (response.cabang_id == 2) {
+                                data_cabang += response.jumlah_total_situmpur;
+                              }
+                              if (response.cabang_id == 3) {
+                                data_cabang += response.jumlah_total_dkw;
+                              }
+                              if (response.cabang_id == 4) {
+                                data_cabang += response.jumlah_total_hr;
+                              }
+                              if (response.cabang_id == 5) {
+                                data_cabang += response.jumlah_total_pbg;
+                              }
+                              if (response.cabang_id == 6) {
+                                data_cabang += response.jumlah_total_cilacap;
+                              }
+                              if (response.cabang_id == 11) {
+                                data_cabang += response.jumlah_total_bumiayu;
+                              }
+                            data_cabang += '</u>' +
+                          '</span>' + 
+                        '</div>' +
+                      '</td>' +
+                    '</tr>';
+                  }
+                }
+              })
+
+              if (response.cabang_id == null) {
+                data_cabang += '' +
+                  '<tr>' +
+                    '<td>' +
+                      '<div style="width: 100%;" class="border border-primary px-2 py-1 text-center bg-info">' +
+                        '<b>Total</b>' +
+                        '<span class="float-right font-weight-bold">' +
+                          '<u>' + response.grand_total + '</u>' +
+                        '</span>' +
+                      '</div>' +
+                    '</td>' +
+                  '</tr>';
+              }
+            $('#tabel_cabang_antrian').append(data_cabang);
+
             let data = '' +
-                '<tr>' +
-                  '<td></td>';
+                '<tr>';
                   
                   $.each(response.total_tanggal, function (index, item) {
                     data += '<td>' +
@@ -375,12 +507,7 @@
                 data += '</tr>';
 
                 $.each(response.cabang_antrians, function (index, item_cabang_antrian) {
-                  data += '<tr>' +
-                    '<td style="visibility: hidden;">' +
-                      '<div style="width: 1px;" class="border border-secondary py-1 text-center">' +
-                        '-' +
-                      '</div>' +
-                    '</td>';
+                  data += '<tr>';
 
                     // situmpur
                     if (item_cabang_antrian.master_cabang == 2) {
@@ -446,13 +573,26 @@
                           '</div>' +
                         '</td>';
                       })
-                    } 
+                    }
                     
                     else {
                       
                     }
                 })
                 data += '</tr>';
+
+                if (response.cabang_id == null) {
+                  data += '' +
+                    '<tr>';
+                      $.each(response.total, function (index, item) {
+                        data += '<td>' +
+                          '<div style="width: 100px;" class="border border-secondary px-2 py-1 text-center bg-info">' +
+                            '<b>' + item + '</b>' +
+                          '</div>' +
+                        '</td>';
+                      })
+                  data += '</tr>';
+                }
 
             $('#tabel_total_antrian').append(data);
             $('.overlay-wrapper').addClass('d-none');
