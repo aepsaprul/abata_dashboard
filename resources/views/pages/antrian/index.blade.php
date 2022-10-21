@@ -70,7 +70,7 @@
             </div>
             <div class="card-body">
               <div class="row">
-                <div class="col-lg-2 col-md-3 col-sm-4 col-6">
+                <div class="col-lg-2 col-md-3 col-sm-4 col-6" style="height: 200px; width: 100%;">
                   <div class="overlay-wrapper d-none">
                     <div class="overlay bg-light"><i class="fas fa-3x fa-sync-alt fa-spin"></i><div class="text-bold pt-2"></div></div>
                   </div>
@@ -406,7 +406,6 @@
             $('.overlay-wrapper').removeClass('d-none');
           },
           success: function (response) {
-            console.log(response);
             let data_cabang = '' +
               '<tr>' +
                 '<td><div style="width: 100%;" class="border border-secondary bg-secondary px-2 py-1 mb-2 text-center">Cabang</div></td>' +

@@ -26,10 +26,15 @@ class AntrianController extends Controller
   public function index()
   {
     // array tanggal
-    $kalender = CAL_GREGORIAN;
+    function days_in_month($month, $year){
+      // calculate number of days in a month
+      return $month == 2 ? ($year % 4 ? 28 : ($year % 100 ? 29 : ($year % 400 ? 28 : 29))) : (($month - 1) % 7 % 2 ? 30 : 31);
+    } 
+
+    // $kalender = CAL_GREGORIAN;
     $bulan = date('m');
     $tahun = date('Y');
-    $jumlah_hari = cal_days_in_month($kalender, $bulan, $tahun);
+    $jumlah_hari = days_in_month($bulan, $tahun);
 
     $total_tanggal = [];
     for ($i=1; $i <= $jumlah_hari ; $i++) {
