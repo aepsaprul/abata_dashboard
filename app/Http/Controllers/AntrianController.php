@@ -301,6 +301,7 @@ class AntrianController extends Controller
     // pbg
     $pengunjung_pbg = AntrianPengunjung::select(DB::raw('count(*) AS total_pengunjung'), DB::raw('DATE(tanggal) AS tanggal_pengunjung'))
       ->where('master_cabang_id', 5)
+      ->where('jabatan', 'desain')
       ->whereBetween('tanggal', [$start_date . ' 00:00:00', $end_date . ' 23:59:00'])
       ->groupBy('tanggal_pengunjung')
       ->get();
