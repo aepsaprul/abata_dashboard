@@ -247,7 +247,7 @@ class AntrianController extends Controller
     $cabang_id = $request->cabang_id;
     $start_date = $request->start_date;
     $end_date = $request->end_date;
-   
+
     $start_date_ = strtotime($start_date); 
     $end_date_ = strtotime($end_date);
   
