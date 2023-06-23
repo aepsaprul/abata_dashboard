@@ -7,9 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class EspkPekerjaan extends Model
 {
-    use HasFactory;
+  use HasFactory;
 
-    protected $table = 'espk_pekerjaans';
+  protected $table = 'espk_pekerjaans';
 
-    protected $connection = 'mysql2';
+  protected $connection = 'mysql2';
 }
